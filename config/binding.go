@@ -6,7 +6,7 @@ import (
 )
 
 const VERSION = "0.0.3"
-const FILE = "decrypto"
+const FILE = "decrypt"
 
 var _binding = binding{}
 
@@ -22,7 +22,7 @@ func (b *binding) init() error {
 	}
 	b.core = p
 
-	fun, err := p.Lookup("Decrypto")
+	fun, err := p.Lookup("Decrypt")
 	if err != nil {
 		panic(err)
 	}
