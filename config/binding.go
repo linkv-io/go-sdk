@@ -5,7 +5,7 @@ import (
 	"plugin"
 )
 
-const VERSION = "0.0.3"
+const VERSION = "0.0.4"
 const FILE = "decrypt"
 
 var _binding = binding{}
