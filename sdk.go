@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	IM  = im.IM{}
-	RTC = rtc.RTC{}
+	IM  = &im.IM{}
+	RTC = &rtc.RTC{}
 )
 
 func Init(appID, appSecret string) error {
