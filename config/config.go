@@ -19,9 +19,18 @@ type RTCConfig struct {
 	AppKey string `json:"app_key"`
 }
 
+type LiveConfig struct {
+	AppName   string `json:"app_id"`
+	AppID     string `json:"app_key"`
+	AppSecret string `json:"app_secret"`
+	Alias     string `json:"alias"`
+	URL       string `json:"url"`
+}
+
 type Config struct {
-	IM  IMConfig  `json:"im"`
-	RTC RTCConfig `json:"rtc"`
+	IM   IMConfig   `json:"im"`
+	RTC  RTCConfig  `json:"rtc"`
+	Live LiveConfig `json:"sensor"`
 }
 
 func (c *Config) Init(appID, appSecret string) error {

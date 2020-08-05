@@ -4,9 +4,16 @@ import (
 	. "github.com/linkv-io/go-sdk/config"
 )
 
-type RTC struct {
+type LvRTC interface {
 }
 
-func (rtc *RTC) GetConfig() *RTCConfig {
+func NewLvRTC() LvRTC {
+	return &linkVRTC{}
+}
+
+type linkVRTC struct {
+}
+
+func (rtc *linkVRTC) GetConfig() *RTCConfig {
 	return &Conf.RTC
 }

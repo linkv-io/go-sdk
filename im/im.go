@@ -4,9 +4,16 @@ import (
 	. "github.com/linkv-io/go-sdk/config"
 )
 
-type IM struct {
+type LvIM interface {
 }
 
-func (im *IM) GetConfig() *IMConfig {
+func NewLvIM() LvIM {
+	return &linkVIM{}
+}
+
+type linkVIM struct {
+}
+
+func (im *linkVIM) GetConfig() *IMConfig {
 	return &Conf.IM
 }
