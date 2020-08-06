@@ -20,8 +20,8 @@ type RTCConfig struct {
 }
 
 type LiveConfig struct {
-	AppName   string `json:"app_id"`
-	AppID     string `json:"app_key"`
+	AppID     string `json:"app_id"`
+	AppKey    string `json:"app_key"`
 	AppSecret string `json:"app_secret"`
 	Alias     string `json:"alias"`
 	URL       string `json:"url"`
