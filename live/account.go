@@ -40,9 +40,6 @@ func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, p
 	params.Add("sign", genSign(params, o.GetConfig().AppSecret))
 
 	uri := o.GetConfig().URL + "/open/v0/thGetToken"
-	fmt.Println(o.GetConfig().AppKey)
-	fmt.Println(o.GetConfig().AppSecret)
-	fmt.Println(uri, params.Encode())
 	jsonData, resp, err := http.PostDataWithHeader(uri, params, nil)
 	if err != nil {
 		return "", "", err
