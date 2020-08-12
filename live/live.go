@@ -15,40 +15,20 @@ import (
 	. "github.com/linkv-io/go-sdk/config"
 )
 
-const (
-	OrderTypeAdd OrderType = iota + 1
-	OrderTypeDel
-)
-
 var (
-	PlatformTypeH5      PlatformType = "h5"
-	PlatformTypeANDROID PlatformType = "android"
-	PlatformTypeIOS     PlatformType = "ios"
+	OrderTypeAdd int64 = 1
+	OrderTypeDel int64 = 2
+
+	SexTypeUnknown int = -1
+	SexTypeFemale  int = 0
+	SexTypeMale    int = 1
+
+	PlatformTypeH5      string = "h5"
+	PlatformTypeANDROID string = "android"
+	PlatformTypeIOS     string = "ios"
+
+	waitTime = time.Millisecond * 300
 )
-
-const (
-	SexTypeUnknown SexType = iota - 1
-	SexTypeFemale
-	SexTypeMale
-)
-
-type OrderType uint8
-
-func (ot *OrderType) String() string {
-	return strconv.Itoa(int(*ot))
-}
-
-type PlatformType string
-
-func (pt *PlatformType) String() string {
-	return string(*pt)
-}
-
-type SexType int8
-
-func (st *SexType) String() string {
-	return strconv.Itoa(int(*st))
-}
 
 func New() *live {
 	return &live{}
@@ -59,6 +39,20 @@ type live struct {
 
 func (o *live) GetConfig() *LiveConfig {
 	return &Conf.Live
+}
+
+func genUniqueIDString() string {
+	nLen := 32
+	var container string
+	var str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+	b := bytes.NewBufferString(str)
+	length := b.Len()
+	bigInt := big.NewInt(int64(length))
+	for i := 0; i < nLen; i++ {
+		randomInt, _ := rand.Int(rand.Reader, bigInt)
+		container += string(str[randomInt.Int64()])
+	}
+	return container
 }
 
 func genRandomString() string {

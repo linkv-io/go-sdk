@@ -13,7 +13,7 @@ func main() {
 		return
 	}
 
-	// 初始化 直播对象
+	// 初始化 live对象
 	live := linkv.NewLvLIVE()
 
 	thirdUID := "test-go-tob"
@@ -35,9 +35,9 @@ func main() {
 	fmt.Printf("golds0:%v\n", golds0)
 
 	// 完成订单
-	uniqueID := "123123"
+	orderID := ""
 	gold := int64(10)
-	golds1, err := live.SuccessOrderByLiveOpenID(openID, uniqueID, linkv.OrderTypeAdd, gold, 10, 1, linkv.PlatformTypeH5, "")
+	golds1, err := live.SuccessOrderByLiveOpenID(openID, linkv.OrderTypeAdd, gold, 10, 1, linkv.PlatformTypeH5, orderID)
 	if err != nil {
 		panic("live.SuccessOrderByLiveOpenID(" + err.Error() + ")")
 	}
@@ -48,8 +48,7 @@ func main() {
 	fmt.Printf("golds1:%v\n", golds1)
 
 	// 修改金币
-	uniqueID1 := "456123"
-	ok, err := live.ChangeGoldByLiveOpenID(openID, uniqueID1, linkv.OrderTypeDel, gold, 1, "测试删除")
+	ok, err := live.ChangeGoldByLiveOpenID(openID, linkv.OrderTypeDel, gold, 1, "测试删除")
 	if err != nil {
 		panic("live.ChangeGoldByLiveOpenID(" + err.Error() + ")")
 	}

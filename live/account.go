@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strconv"
+	"time"
 
 	"github.com/linkv-io/go-sdk/http"
 )
 
-func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
+func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex int, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
 	params := url.Values{}
 	nonce := genRandomString()
 	params.Add("nonce_str", nonce)
@@ -34,40 +36,52 @@ func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, p
 	}
 
 	if sex != SexTypeUnknown {
-		params.Add("sex", sex.String())
+		params.Add("sex", strconv.Itoa(sex))
 	}
 
 	params.Add("sign", genSign(params, o.GetConfig().AppSecret))
 
 	uri := o.GetConfig().URL + "/open/v0/thGetToken"
-	jsonData, resp, err := http.PostDataWithHeader(uri, params, nil)
-	if err != nil {
-		return "", "", err
-	}
 
-	if resp.StatusCode != 200 {
-		return "", "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
-	}
+	var errResult error
 
-	var result struct {
-		Status int    `json:"status,string"`
-		Msg    string `json:"msg"`
-	}
+	for i := 0; i < 3; i++ {
 
-	if err := json.Unmarshal(jsonData, &result); err != nil {
-		return "", "", err
+		jsonData, resp, err := http.PostDataWithHeader(uri, params, nil)
+		if err != nil {
+			return "", "", err
+		}
+
+		if resp.StatusCode != 200 {
+			return "", "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+		}
+
+		var result struct {
+			Status int    `json:"status,string"`
+			Msg    string `json:"msg"`
+		}
+
+		if err := json.Unmarshal(jsonData, &result); err != nil {
+			return "", "", err
+		}
+		if result.Status != 200 {
+			if result.Status == 500 {
+				errResult = fmt.Errorf("message(%v)", result.Msg)
+				time.Sleep(waitTime)
+				continue
+			}
+			return "", "", fmt.Errorf("message(%v)", result.Msg)
+		}
+		var resultData struct {
+			Data struct {
+				Token  string `json:"token"`
+				OpenID string `json:"openId"`
+			} `json:"data"`
+		}
+		if err := json.Unmarshal(jsonData, &resultData); err != nil {
+			return "", "", err
+		}
+		return resultData.Data.Token, resultData.Data.OpenID, nil
 	}
-	if result.Status != 200 {
-		return "", "", fmt.Errorf("message(%v)", result.Msg)
-	}
-	var resultData struct {
-		Data struct {
-			Token  string `json:"token"`
-			OpenID string `json:"openId"`
-		} `json:"data"`
-	}
-	if err := json.Unmarshal(jsonData, &resultData); err != nil {
-		return "", "", err
-	}
-	return resultData.Data.Token, resultData.Data.OpenID, nil
+	return "", "", errResult
 }
