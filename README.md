@@ -1,4 +1,5 @@
 [![API Reference](https://img.shields.io/badge/api-reference-blue.svg)]()
+![Golang Version](https://img.shields.io/badge/golang-%3e%3d1.8-blue.svg)
 [![Build Status](https://img.shields.io/static/v1?label=build&message=passing&color=32CD32)]()
 [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/linkv-io/dart-sdk/blob/master/LICENSE)
 
