@@ -3,11 +3,10 @@ package live
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/linkv-io/go-sdk/http"
 	"net/url"
 	"strconv"
 	"time"
-
-	"github.com/linkv-io/go-sdk/http"
 )
 
 func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex int, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
@@ -64,24 +63,26 @@ func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex int, portr
 		if err := json.Unmarshal(jsonData, &result); err != nil {
 			return "", "", err
 		}
-		if result.Status != 200 {
-			if result.Status == 500 {
-				errResult = fmt.Errorf("message(%v)", result.Msg)
-				time.Sleep(waitTime)
-				continue
+
+		if result.Status == 200 {
+			var resultData struct {
+				Data struct {
+					Token  string `json:"token"`
+					OpenID string `json:"openId"`
+				} `json:"data"`
 			}
-			return "", "", fmt.Errorf("message(%v)", result.Msg)
+			if err := json.Unmarshal(jsonData, &resultData); err != nil {
+				return "", "", err
+			}
+			return resultData.Data.Token, resultData.Data.OpenID, nil
 		}
-		var resultData struct {
-			Data struct {
-				Token  string `json:"token"`
-				OpenID string `json:"openId"`
-			} `json:"data"`
+
+		if result.Status == 500 {
+			errResult = fmt.Errorf("message(%v)", result.Msg)
+			time.Sleep(waitTime)
+			continue
 		}
-		if err := json.Unmarshal(jsonData, &resultData); err != nil {
-			return "", "", err
-		}
-		return resultData.Data.Token, resultData.Data.OpenID, nil
+		return "", "", fmt.Errorf("message(%v)", result.Msg)
 	}
 	return "", "", errResult
 }

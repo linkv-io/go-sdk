@@ -49,24 +49,24 @@ func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, mone
 		if err := json.Unmarshal(jsonData, &result); err != nil {
 			return 0, err
 		}
-		if result.Status != 200 {
-			if result.Status == 500 {
-				errResult = fmt.Errorf("message(%v)", result.Msg)
-				time.Sleep(waitTime)
-				continue
+		if result.Status == 200 {
+			var resultData struct {
+				Data struct {
+					Token     int64  `json:"livemeTokens,string"`
+					IsMigrate string `json:"isMigrate"`
+				} `json:"data"`
 			}
-			return 0, fmt.Errorf("message(%v)", result.Msg)
+			if err := json.Unmarshal(jsonData, &resultData); err != nil {
+				return 0, err
+			}
+			return resultData.Data.Token, nil
 		}
-		var resultData struct {
-			Data struct {
-				Token     int64  `json:"livemeTokens,string"`
-				IsMigrate string `json:"isMigrate"`
-			} `json:"data"`
+		if result.Status == 500 {
+			errResult = fmt.Errorf("message(%v)", result.Msg)
+			time.Sleep(waitTime)
+			continue
 		}
-		if err := json.Unmarshal(jsonData, &resultData); err != nil {
-			return 0, err
-		}
-		return resultData.Data.Token, nil
+		return 0, fmt.Errorf("message(%v)", result.Msg)
 	}
 	return 0, errResult
 }
