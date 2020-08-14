@@ -17,7 +17,7 @@ func (o *live) ChangeGoldByLiveOpenID(liveOpenID string, orderType, gold, expr i
 	params.Add("app_id", o.GetConfig().AppKey)
 
 	params.Add("uid", liveOpenID)
-	params.Add("request_id", genUniqueIDString())
+	params.Add("request_id", genUniqueIDString(o.GetConfig().AppKey))
 	params.Add("type", strconv.FormatInt(orderType, 10))
 	params.Add("value", strconv.FormatInt(gold, 10))
 	if expr > 0 {

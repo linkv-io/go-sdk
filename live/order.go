@@ -17,7 +17,7 @@ func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, mone
 	params.Add("app_id", o.GetConfig().AppKey)
 
 	params.Add("uid", liveOpenID)
-	params.Add("request_id", genUniqueIDString())
+	params.Add("request_id", genUniqueIDString(o.GetConfig().AppKey))
 	params.Add("type", strconv.FormatInt(orderType, 10))
 	params.Add("value", strconv.FormatInt(gold, 10))
 	params.Add("money", strconv.FormatInt(money, 10))
