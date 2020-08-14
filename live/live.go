@@ -41,9 +41,9 @@ func (o *live) GetConfig() *LiveConfig {
 	return &Conf.Live
 }
 
-func genUniqueIDString() string {
-	nLen := 32
-	var container string
+func genUniqueIDString(appKey string) string {
+	nLen := 9
+	container := string([]byte(appKey)[2:]) + "-"
 	var str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 	b := bytes.NewBufferString(str)
 	length := b.Len()
