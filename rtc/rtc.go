@@ -3,10 +3,7 @@ package rtc
 import (
 	"crypto/hmac"
 	"crypto/sha1"
-	"encoding/hex"
 	. "github.com/linkv-io/go-sdk/config"
-	"strconv"
-	"time"
 )
 
 func New() *rtc {
@@ -18,12 +15,6 @@ type rtc struct {
 
 func (o *rtc) GetConfig() *RTCConfig {
 	return &Conf.RTC
-}
-
-func (o *rtc) GenAuth() (string, int64) {
-	now := time.Now().Unix()
-	expireTS := strconv.FormatInt(now, 10)
-	return hex.EncodeToString(hmacSha1([]byte(o.GetConfig().AppKey), []byte(o.GetConfig().AppID+expireTS))), now
 }
 
 // hmac sha1
