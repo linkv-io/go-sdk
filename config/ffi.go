@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"plugin"
+	"runtime"
 )
 
 const DownloadURL = "http://dl.linkv.fun/static/server"
@@ -33,7 +34,7 @@ func download(name, path, version string) (bool, error) {
 		return true, nil
 	}
 
-	resp, err := http.Get(DownloadURL + "/" + version + "/" + platformFile(name))
+	resp, err := http.Get(DownloadURL + "/" + version + "/" + runtime.Version() + "/" + platformFile(name))
 	if err != nil {
 		return false, err
 	}
