@@ -1,3 +1,3 @@
 package config
 
-var ext = ".g.dylib"
+var ext = ".dylib"

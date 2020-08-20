@@ -1,3 +1,3 @@
 package config
 
-var ext = ".g.so"
+var ext = ".so"
