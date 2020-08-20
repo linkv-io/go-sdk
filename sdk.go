@@ -40,7 +40,7 @@ func NewLvIM() LvIM {
 }
 
 type LvRTC interface {
-	GenAuth() (appID string, authKey string, expireTS int64)
+	GenAuth() (appID string, authKey string, expireTS string)
 }
 
 func NewLvRTC() LvRTC {

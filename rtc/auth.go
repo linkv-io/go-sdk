@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func (o *rtc) GenAuth() (string, string, int64) {
-	now := time.Now().Unix()
-	expireTS := strconv.FormatInt(now, 10)
-	return o.GetConfig().AppID, hex.EncodeToString(hmacSha1([]byte(o.GetConfig().AppKey), []byte(o.GetConfig().AppID+expireTS))), now
+func (o *rtc) GenAuth() (string, string, string) {
+	expireTS := strconv.FormatInt(time.Now().Unix(), 10)
+	data := o.GetConfig().AppID + expireTS
+	return o.GetConfig().AppID, hex.EncodeToString(hmacSha1([]byte(o.GetConfig().AppKey), []byte(data))), expireTS
 }

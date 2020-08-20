@@ -10,7 +10,7 @@ import (
 type AuthResult struct {
 	AppID    string `json:"app_id"`
 	Auth     string `json:"auth"`
-	ExpireTS int64  `json:"expire_ts,string"`
+	ExpireTS string `json:"expire_ts"`
 }
 
 func main() {
@@ -29,6 +29,7 @@ func main() {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
+			w.Write([]byte{})
 			return
 		}
 		//fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
@@ -36,10 +37,10 @@ func main() {
 
 		data := &AuthResult{appID, auth, expireTS}
 		jsonData, _ := json.Marshal(data)
-		fmt.Fprintf(w, "%s", jsonData)
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
+		fmt.Fprintf(w, "%s", jsonData)
 	})
 
 	http.ListenAndServe(":8080", nil)
