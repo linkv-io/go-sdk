@@ -52,7 +52,7 @@ func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, mone
 		if result.Status == 200 {
 			var resultData struct {
 				Data struct {
-					Token     int64  `json:"livemeTokens,string"`
+					Token     int64  `json:"tokens,string"`
 					IsMigrate string `json:"isMigrate"`
 				} `json:"data"`
 			}
