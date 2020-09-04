@@ -8,8 +8,8 @@ import (
 var Conf = &Config{}
 
 type IMConfig struct {
-	AppName   string `json:"app_id"`
-	AppID     string `json:"app_key"`
+	AppID     string `json:"app_id"`
+	AppKey    string `json:"app_key"`
 	AppSecret string `json:"app_secret"`
 	URL       string `json:"url"`
 }

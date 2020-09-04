@@ -33,6 +33,8 @@ func NewLvLIVE() LvLIVE {
 }
 
 type LvIM interface {
+	GetTokenByThirdUID(thirdUID string) (imToken string, err error)
+	PushConverseData(fromUID, toUID, objectName, content, pushContent, pushData, deviceID, toAppID, toUserExtSysUserID, isCheckSensitiveWords string) (success bool, err error)
 }
 
 func NewLvIM() LvIM {

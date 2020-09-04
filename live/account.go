@@ -10,6 +10,10 @@ import (
 )
 
 func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex int, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
+	if len(thirdUID) == 0 || len(aID) == 0 {
+		return "", "", fmt.Errorf("params error")
+	}
+
 	params := url.Values{}
 	nonce := genRandomString()
 	params.Add("nonce_str", nonce)

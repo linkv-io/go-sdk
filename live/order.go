@@ -11,6 +11,11 @@ import (
 )
 
 func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType, optionalOrderID string) (int64, error) {
+
+	if len(liveOpenID) == 0 || orderType == 0 || gold == 0 || money == 0 || expr == 0 || len(platformType) == 0 || len(optionalOrderID) == 0 {
+		return 0, fmt.Errorf("params error")
+	}
+
 	params := url.Values{}
 	nonce := genRandomString()
 	params.Add("nonce_str", nonce)
