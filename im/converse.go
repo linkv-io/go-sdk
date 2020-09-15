@@ -20,7 +20,6 @@ func (o *im) PushConverseData(fromUID, toUID, objectName, content, pushContent, 
 	sort.Strings(arr)
 	md5Data := md5.Sum([]byte(strings.Join(arr, "")))
 	cmimToken := strings.ToLower(hex.EncodeToString(md5Data[:]))
-
 	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
@@ -29,7 +28,7 @@ func (o *im) PushConverseData(fromUID, toUID, objectName, content, pushContent, 
 	headers["timestamp"] = timestamp
 	headers["cmimToken"] = cmimToken
 	headers["sign"] = sign
-	headers["appkey"] = o.GetConfig().AppID
+	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}

@@ -17,14 +17,14 @@ func main() {
 	im := linkv.NewLvIM()
 
 	thirdUID := "golang"
-	//thirdToken, err := im.GetTokenByThirdUID(thirdUID)
-	//if err != nil {
-	//	panic("im.GetTokenByThirdUID(" + err.Error() + ")")
-	//}
-	//fmt.Printf("token:%s\n", thirdToken)
+	thirdToken, err := im.GetTokenByThirdUID(thirdUID)
+	if err != nil {
+		panic("im.GetTokenByThirdUID(" + err.Error() + ")")
+	}
+	fmt.Printf("token:%s\n", thirdToken)
 	toUID := "123456"
 	objectName := "RC:textMsg"
-	content := "I'm golang"
+	content := "77881122"
 	ok, err := im.PushConverseData(thirdUID, toUID, objectName, content, "", "", "", "", "", "")
 	if err != nil {
 		panic("im.PushConverseData(" + err.Error() + ")")

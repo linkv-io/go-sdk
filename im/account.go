@@ -28,11 +28,11 @@ func (o *im) GetTokenByThirdUID(thirdUID string) (string, error) {
 	headers["nonce"] = nonce
 	headers["timestamp"] = timestamp
 	headers["cmimToken"] = cmimToken
+	headers["signature"] = cmimToken
 	headers["sign"] = sign
-	headers["appkey"] = o.GetConfig().AppID
+	headers["appkey"] = o.GetConfig().AppKey
 	headers["appUid"] = thirdUID
 	headers["appId"] = o.GetConfig().AppID
-	headers["signature"] = sign
 
 	params := url.Values{}
 	params.Set("userId", thirdUID)
@@ -51,9 +51,8 @@ func (o *im) GetTokenByThirdUID(thirdUID string) (string, error) {
 		if resp.StatusCode != 200 {
 			return "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
 		}
-
 		var result struct {
-			Code  int    `json:"code"`
+			Code  int    `json:"code,string"`
 			Token string `json:"token"`
 		}
 
