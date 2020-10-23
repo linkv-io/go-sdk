@@ -17,10 +17,6 @@ type im struct {
 }
 
 func (o *im) GetConfig() *IMConfig {
-	Conf.IM.AppID = "linkvim"
-	Conf.IM.AppKey = "41160b64"
-	Conf.IM.AppSecret = "a9867322c6567852fec8309fa183c883"
-	Conf.IM.URL = "http://catchu-im-api.fusionv.com"
 	return &Conf.IM
 }
 
