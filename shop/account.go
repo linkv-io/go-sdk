@@ -1,4 +1,4 @@
-package live
+package shop
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (o *live) GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
+func (o *shop) GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, portraitURI, userEmail, countryCode, birthday string) (string, string, error) {
 	if len(thirdUID) == 0 || len(aID) == 0 {
 		return "", "", fmt.Errorf("params error")
 	}

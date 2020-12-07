@@ -8,22 +8,25 @@ import (
 	"github.com/linkv-io/go-sdk/rtc"
 )
 
+type SexType = live.SexType
+type PlatformType = live.PlatformType
+
 var (
 	OrderTypeAdd = live.OrderTypeAdd
 	OrderTypeDel = live.OrderTypeDel
 
-	PlatformTypeH5      = live.PlatformTypeH5
-	PlatformTypeANDROID = live.PlatformTypeANDROID
-	PlatformTypeIOS     = live.PlatformTypeIOS
+	PlatformTypeH5      = live.PlatformH5
+	PlatformTypeANDROID = live.PlatformANDROID
+	PlatformTypeIOS     = live.PlatformIOS
 
-	SexTypeUnknown = live.SexTypeUnknown
-	SexTypeFemale  = live.SexTypeFemale
-	SexTypeMale    = live.SexTypeMale
+	SexTypeUnknown = live.SexUnknown
+	SexTypeFemale  = live.SexFemale
+	SexTypeMale    = live.SexMale
 )
 
 type LvLIVE interface {
-	GetTokenByThirdUID(thirdUID, aID, userName string, sex int, portraitURI, userEmail, countryCode, birthday string) (liveToken, liveOpenID string, err error)
-	SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType, orderID string) (golds int64, err error)
+	GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, portraitURI, userEmail, countryCode, birthday string) (liveToken, liveOpenID string, err error)
+	SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType PlatformType, orderID string) (golds int64, err error)
 	ChangeGoldByLiveOpenID(liveOpenID string, orderType, gold, expr int64, optionalReason string) (ok bool, err error)
 	GetGoldByLiveOpenID(liveOpenID string) (golds int64, err error)
 }

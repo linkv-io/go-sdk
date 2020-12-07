@@ -27,10 +27,19 @@ type LiveConfig struct {
 	URL       string `json:"url"`
 }
 
+type ShopConfig struct {
+	AppID     string `json:"app_id"`
+	AppKey    string `json:"app_key"`
+	AppSecret string `json:"app_secret"`
+	Alias     string `json:"alias"`
+	URL       string `json:"url"`
+}
+
 type Config struct {
 	IM   IMConfig   `json:"im"`
 	RTC  RTCConfig  `json:"rtc"`
 	Live LiveConfig `json:"sensor"`
+	Shop ShopConfig `json:"shop"`
 }
 
 func (c *Config) Init(appID, appSecret string) error {

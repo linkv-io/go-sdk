@@ -1,47 +1,38 @@
-package live
+package shop
 
 import (
 	"bytes"
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
+	. "github.com/linkv-io/go-sdk/config"
 	"math/big"
 	"net/url"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
-
-	. "github.com/linkv-io/go-sdk/config"
 )
 
 type SexType int
-type PlatformType string
 
 var (
-	OrderTypeAdd int64 = 1
-	OrderTypeDel int64 = 2
-
 	SexUnknown SexType = -1
 	SexFemale  SexType = 0
 	SexMale    SexType = 1
 
-	PlatformH5      PlatformType = "h5"
-	PlatformANDROID PlatformType = "android"
-	PlatformIOS     PlatformType = "ios"
-
 	waitTime = time.Millisecond * 300
 )
 
-func New() *live {
-	return &live{}
+func New() *shop {
+	return &shop{}
 }
 
-type live struct {
+type shop struct {
 }
 
-func (o *live) GetConfig() *LiveConfig {
-	return &Conf.Live
+func (o *shop) GetConfig() *ShopConfig {
+	return &Conf.Shop
 }
 
 func genUniqueIDString(appKey string) string {

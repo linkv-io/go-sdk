@@ -10,7 +10,7 @@ import (
 	"github.com/linkv-io/go-sdk/http"
 )
 
-func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType, optionalOrderID string) (int64, error) {
+func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType PlatformType, optionalOrderID string) (int64, error) {
 
 	if len(liveOpenID) == 0 || orderType == 0 || gold == 0 || money == 0 || expr == 0 || len(platformType) == 0 || len(optionalOrderID) == 0 {
 		return 0, fmt.Errorf("params error")
@@ -28,7 +28,7 @@ func (o *live) SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, mone
 	params.Add("money", strconv.FormatInt(money, 10))
 	params.Add("expriation", strconv.FormatInt(time.Now().Unix()+int64(expr)*86400, 10))
 	params.Add("channel", o.GetConfig().Alias)
-	params.Add("platform", platformType)
+	params.Add("platform", string(platformType))
 
 	if len(optionalOrderID) > 0 {
 		params.Add("order_id", optionalOrderID)
