@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	linkv "github.com/linkv-io/go-sdk"
+	"github.com/linkv-io/go-sdk/shop"
 )
 
 func main() {
@@ -14,13 +15,13 @@ func main() {
 	}
 
 	// 初始化 live对象
-	live := linkv.NewLvLIVE()
+	live := linkv.NewLvSHOP()
 
 	thirdUID := "test-go-tob"
 	aID := "test"
 	// 进行帐号绑定
 	token, openID, err := live.GetTokenByThirdUID(thirdUID, aID, "test-go",
-		linkv.SexTypeUnknown, "http://meet.linkv.sg/app/rank-list/static/img/defaultavatar.cd935fdb.png",
+		shop.SexUnknown, "http://meet.linkv.sg/app/rank-list/static/img/defaultavatar.cd935fdb.png",
 		"", "", "")
 	if err != nil {
 		panic("live.GetTokenByThirdUID(" + err.Error() + ")")

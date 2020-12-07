@@ -6,33 +6,26 @@ import (
 	"github.com/linkv-io/go-sdk/im"
 	"github.com/linkv-io/go-sdk/live"
 	"github.com/linkv-io/go-sdk/rtc"
-)
-
-type SexType = live.SexType
-type PlatformType = live.PlatformType
-
-var (
-	OrderTypeAdd = live.OrderTypeAdd
-	OrderTypeDel = live.OrderTypeDel
-
-	PlatformTypeH5      = live.PlatformH5
-	PlatformTypeANDROID = live.PlatformANDROID
-	PlatformTypeIOS     = live.PlatformIOS
-
-	SexTypeUnknown = live.SexUnknown
-	SexTypeFemale  = live.SexFemale
-	SexTypeMale    = live.SexMale
+	"github.com/linkv-io/go-sdk/shop"
 )
 
 type LvLIVE interface {
-	GetTokenByThirdUID(thirdUID, aID, userName string, sex SexType, portraitURI, userEmail, countryCode, birthday string) (liveToken, liveOpenID string, err error)
-	SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType PlatformType, orderID string) (golds int64, err error)
+	GetTokenByThirdUID(thirdUID, aID, userName string, sex live.SexType, portraitURI, userEmail, countryCode, birthday string) (liveToken, liveOpenID string, err error)
+	SuccessOrderByLiveOpenID(liveOpenID string, orderType, gold, money, expr int64, platformType live.PlatformType, orderID string) (golds int64, err error)
 	ChangeGoldByLiveOpenID(liveOpenID string, orderType, gold, expr int64, optionalReason string) (ok bool, err error)
 	GetGoldByLiveOpenID(liveOpenID string) (golds int64, err error)
 }
 
 func NewLvLIVE() LvLIVE {
 	return live.New()
+}
+
+type LvSHOP interface {
+	GetTokenByThirdUID(thirdUID, aID, userName string, sex shop.SexType, portraitURI, userEmail, countryCode, birthday string) (liveToken, liveOpenID string, err error)
+}
+
+func NewLvSHOP() LvSHOP {
+	return shop.New()
 }
 
 type LvIM interface {

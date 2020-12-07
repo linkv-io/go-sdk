@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	linkv "github.com/linkv-io/go-sdk"
+	li "github.com/linkv-io/go-sdk/live"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 	aID := "test"
 	// 进行帐号绑定
 	token, openID, err := live.GetTokenByThirdUID(thirdUID, aID, "test-go",
-		linkv.SexTypeUnknown, "http://meet.linkv.sg/app/rank-list/static/img/defaultavatar.cd935fdb.png",
+		li.SexUnknown, "http://meet.linkv.sg/app/rank-list/static/img/defaultavatar.cd935fdb.png",
 		"", "", "")
 	if err != nil {
 		panic("live.GetTokenByThirdUID(" + err.Error() + ")")
@@ -38,7 +39,7 @@ func main() {
 	// 完成订单
 	orderID := ""
 	gold := int64(10)
-	golds1, err := live.SuccessOrderByLiveOpenID(openID, linkv.OrderTypeAdd, gold, 10, 1, linkv.PlatformTypeH5, orderID)
+	golds1, err := live.SuccessOrderByLiveOpenID(openID, li.OrderTypeAdd, gold, 10, 1, li.PlatformH5, orderID)
 	if err != nil {
 		panic("live.SuccessOrderByLiveOpenID(" + err.Error() + ")")
 	}
@@ -49,7 +50,7 @@ func main() {
 	fmt.Printf("golds1:%v\n", golds1)
 
 	// 修改金币
-	ok, err := live.ChangeGoldByLiveOpenID(openID, linkv.OrderTypeDel, gold, 1, "测试删除")
+	ok, err := live.ChangeGoldByLiveOpenID(openID, li.OrderTypeDel, gold, 1, "测试删除")
 	if err != nil {
 		panic("live.ChangeGoldByLiveOpenID(" + err.Error() + ")")
 	}
