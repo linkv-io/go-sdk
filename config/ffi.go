@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"plugin"
 	"runtime"
 )
@@ -12,21 +13,22 @@ import (
 const DownloadURL = "http://dl.linkv.fun/static/server"
 
 func platformFile(name string) string {
-	return fmt.Sprintf("/lib%s%s", name, ext)
+	return fmt.Sprintf("lib%s%s", name, ext)
 }
 
 func dlopenPlatformSpecific(name, path string) (*plugin.Plugin, error) {
 	if path == "" {
 		path = os.TempDir()
 	}
-	return plugin.Open(path + platformFile(name))
+
+	return plugin.Open(filepath.Join(path + platformFile(name)))
 }
 
 func download(name, path, version string) (bool, error) {
 	if path == "" {
 		path = os.TempDir()
 	}
-	ok, err := fileExists(path + platformFile(name))
+	ok, err := fileExists(filepath.Join(path + platformFile(name)))
 	if err != nil {
 		return false, err
 	}
@@ -34,7 +36,7 @@ func download(name, path, version string) (bool, error) {
 		return true, nil
 	}
 
-	resp, err := http.Get(DownloadURL + "/" + version + "/" + runtime.Version() + platformFile(name))
+	resp, err := http.Get(DownloadURL + "/" + version + "/" + runtime.Version() + "/" + platformFile(name))
 	if err != nil {
 		return false, err
 	}
@@ -44,7 +46,7 @@ func download(name, path, version string) (bool, error) {
 		return false, nil
 	}
 
-	out, err := os.Create(path + platformFile(name))
+	out, err := os.Create(filepath.Join(path + platformFile(name)))
 	if err != nil {
 		return false, err
 	}
