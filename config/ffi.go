@@ -13,7 +13,7 @@ import (
 const DownloadURL = "http://dl.linkv.fun/static/server"
 
 func platformFile(name string) string {
-	return fmt.Sprintf("lib%s%s", name, ext)
+	return fmt.Sprintf("/lib%s%s", name, ext)
 }
 
 func dlopenPlatformSpecific(name, path string) (*plugin.Plugin, error) {
@@ -36,7 +36,7 @@ func download(name, path, version string) (bool, error) {
 		return true, nil
 	}
 
-	resp, err := http.Get(DownloadURL + "/" + version + "/" + runtime.Version() + "/" + platformFile(name))
+	resp, err := http.Get(DownloadURL + "/" + version + "/" + runtime.Version() + platformFile(name))
 	if err != nil {
 		return false, err
 	}
