@@ -75,7 +75,7 @@ func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, to
 	return "", errResult
 }
 
-func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, content, objectName string) (string, error) {
+func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, content, objectName string) (string, []string, error) {
 	nonce := genGUID()
 	timestamp := getTimestampS()
 
@@ -106,28 +106,36 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 
 		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
 		if err != nil {
-			return "", err
+			return "", nil, err
 		}
 
 		if resp.StatusCode != 200 {
-			return "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+			return "", nil, fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
 		}
 
 		var result struct {
-			ID   string `json:"requestId"`
-			Code int    `json:"code"`
-			Msg  string `json:"msg"`
+			ID   string         `json:"requestId"`
+			Code int            `json:"code"`
+			Msg  string         `json:"msg"`
+			Data map[string]int `json:"messageSendResult"`
 		}
 
 		if err := json.Unmarshal(jsonData, &result); err != nil {
-			return "", err
+			return "", nil, err
+		}
+
+		var list []string
+		for k, v := range result.Data {
+			if v != 200 {
+				list = append(list, k)
+			}
 		}
 
 		if result.Code == 200 {
-			return result.ID, nil
+			return result.ID, list, nil
 		}
 
-		return "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		return "", nil, fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
-	return "", errResult
+	return "", nil, errResult
 }

@@ -32,9 +32,11 @@ func main() {
 	}
 	fmt.Println("PushConverseData", requestID)
 
-	if requestID, err = im.PushConverseDatas(thirdToken, thirdUID, []string{toUID}, content, objectName); err != nil {
+	var failUIDs []string
+	if requestID, failUIDs, err = im.PushConverseDatas(thirdToken, thirdUID, []string{toUID}, content, objectName); err != nil {
 		panic("im.PushConverseDatas(" + err.Error() + ")")
 	}
+	fmt.Println("failUIDs", failUIDs)
 	fmt.Println("PushConverseDatas", requestID)
 
 	objectName = "xxx"
