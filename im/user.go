@@ -5,12 +5,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/linkv-io/go-sdk/http"
 	"net/url"
+	"strconv"
 	"strings"
+
+	"github.com/linkv-io/go-sdk/http"
 )
 
-func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (string, error) {
+func (o *im) UserBlock(cmimToken, fromUID string, userIDs []string, min int64) error {
 	nonce := genGUID()
 	timestamp := getTimestampS()
 
@@ -27,21 +29,12 @@ func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, to
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
-	params.Set("fromUserId", fromUID)
-	params.Set("toUserId", toUID)
-	params.Set("content", content)
 	params.Set("appId", o.GetConfig().AppID)
-	params.Set("objectName", objectName)
-
-	if len(toAppID) > 0 {
-		params.Set("toUserAppid", toAppID)
+	params.Set("userIds", strings.Join(userIDs, ","))
+	if min > 0 {
+		params.Set("minute", strconv.FormatInt(min, 10))
 	}
-
-	if len(toUserExtSysUserID) > 0 {
-		params.Set("toUserExtSysUserId", toUserExtSysUserID)
-	}
-
-	uri := o.GetConfig().URL + "/api/rest/message/v1/converse/pushConverseData"
+	uri := o.GetConfig().URL + "/api/rest/user/block"
 
 	var errResult error
 
@@ -49,33 +42,32 @@ func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, to
 
 		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
 		if err != nil {
-			return "", err
+			return err
 		}
 
 		if resp.StatusCode != 200 {
-			return "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+			return fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
 		}
 
 		var result struct {
-			ID   string `json:"requestId"`
 			Code int    `json:"code"`
 			Msg  string `json:"msg"`
 		}
 
 		if err := json.Unmarshal(jsonData, &result); err != nil {
-			return "", err
+			return err
 		}
 
 		if result.Code == 200 {
-			return result.ID, nil
+			return nil
 		}
 
-		return "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		return fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
-	return "", errResult
+	return errResult
 }
 
-func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, content, objectName string) (string, error) {
+func (o *im) UserStatus(cmimToken, fromUID, userID string) (bool, string, error) {
 	nonce := genGUID()
 	timestamp := getTimestampS()
 
@@ -92,13 +84,10 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
-	params.Set("fromUserId", fromUID)
-	params.Set("toUserIds", strings.Join(toUIDs, ","))
-	params.Set("content", content)
 	params.Set("appId", o.GetConfig().AppID)
-	params.Set("objectName", objectName)
+	params.Set("userId", userID)
 
-	uri := o.GetConfig().URL + "/api/rest/message/v1/converse/pushConverseDatas"
+	uri := o.GetConfig().URL + "/api/rest/userOnlineStatus"
 
 	var errResult error
 
@@ -106,28 +95,29 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 
 		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
 		if err != nil {
-			return "", err
+			return false, "", err
 		}
 
 		if resp.StatusCode != 200 {
-			return "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+			return false, "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
 		}
 
 		var result struct {
-			ID   string `json:"requestId"`
-			Code int    `json:"code"`
-			Msg  string `json:"msg"`
+			Code      int    `json:"code"`
+			Online    int    `json:"data"`
+			Msg       string `json:"msg"`
+			RequestID string `json:"requestId"`
 		}
 
 		if err := json.Unmarshal(jsonData, &result); err != nil {
-			return "", err
+			return false, "", err
 		}
 
 		if result.Code == 200 {
-			return result.ID, nil
+			return result.Online == 1, result.RequestID, nil
 		}
 
-		return "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		return false, "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
-	return "", errResult
+	return false, "", errResult
 }
