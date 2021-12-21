@@ -57,7 +57,7 @@ func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, to
 		}
 
 		var result struct {
-			ID   string `json:"requestId"`
+			ID   string `json:"requestID"`
 			Code int    `json:"code"`
 			Msg  string `json:"msg"`
 		}
@@ -114,7 +114,7 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 		}
 
 		var result struct {
-			ID   string         `json:"requestId"`
+			ID   string         `json:"requestID"`
 			Code int            `json:"code"`
 			Msg  string         `json:"msg"`
 			Data map[string]int `json:"messageSendResult"`
@@ -124,6 +124,9 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 			return "", nil, err
 		}
 
+		if result.Code != 200 {
+			return "", nil, fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		}
 		var list []string
 		for k, v := range result.Data {
 			if v != 200 {
@@ -131,11 +134,8 @@ func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, conte
 			}
 		}
 
-		if result.Code == 200 {
-			return result.ID, list, nil
-		}
+		return result.ID, list, nil
 
-		return "", nil, fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
 	return "", nil, errResult
 }

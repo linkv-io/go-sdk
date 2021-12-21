@@ -64,4 +64,15 @@ func main() {
 	}
 	fmt.Println("bOnline", bOnline)
 	fmt.Println("UserStatus", requestID)
+
+	if requestID, failUIDs, err = im.AddUserBlack(thirdToken, thirdUID, []string{"123123"}); err != nil {
+		panic("im.AddUserBlack(" + err.Error() + ")")
+	}
+	fmt.Println("AddUserBlack requestID:", requestID, "failUIDs:", failUIDs)
+
+	if requestID, failUIDs, err = im.RemoveUserBlack(thirdToken, thirdUID, []string{"123123"}); err != nil {
+		panic("im.RemoveUserBlack" + err.Error() + ")")
+	}
+	fmt.Println("RemoveUserBlack requestID:", requestID, "failUIDs:", failUIDs)
+
 }

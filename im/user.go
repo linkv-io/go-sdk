@@ -106,7 +106,7 @@ func (o *im) UserStatus(cmimToken, fromUID, userID string) (bool, string, error)
 			Code      int    `json:"code"`
 			Online    int    `json:"data"`
 			Msg       string `json:"msg"`
-			RequestID string `json:"requestId"`
+			RequestID string `json:"requestID"`
 		}
 
 		if err := json.Unmarshal(jsonData, &result); err != nil {
@@ -120,4 +120,124 @@ func (o *im) UserStatus(cmimToken, fromUID, userID string) (bool, string, error)
 		return false, "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
 	return false, "", errResult
+}
+
+func (o *im) AddUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
+	nonce := genGUID()
+	timestamp := getTimestampS()
+
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
+
+	headers := make(map[string]string)
+	headers["nonce"] = nonce
+	headers["timestamp"] = timestamp
+	headers["cmimToken"] = cmimToken
+	headers["sign"] = sign
+	headers["appUid"] = fromUID
+	headers["appkey"] = o.GetConfig().AppKey
+	headers["appId"] = o.GetConfig().AppID
+
+	params := url.Values{}
+	params.Set("userId", o.GetConfig().AppID)
+	params.Set("blackUserIds", strings.Join(userIDs, ","))
+	uri := o.GetConfig().URL + "/api/rest/user/addUserBlack"
+
+	var errResult error
+
+	for i := 0; i < 3; i++ {
+
+		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
+		if err != nil {
+			return "", userIDs, err
+		}
+
+		if resp.StatusCode != 200 {
+			return "", userIDs, fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+		}
+
+		var result struct {
+			ID   string         `json:"requestID"`
+			Code int            `json:"code"`
+			Msg  string         `json:"msg"`
+			Data map[string]int `json:"messageSendResult"`
+		}
+
+		if err = json.Unmarshal(jsonData, &result); err != nil {
+			return "", userIDs, err
+		}
+
+		if result.Code != 200 {
+			return "", userIDs, fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		}
+
+		var list []string
+		for k, v := range result.Data {
+			if v != 200 {
+				list = append(list, k)
+			}
+		}
+		return result.ID, list, nil
+
+	}
+	return "", userIDs, errResult
+}
+
+func (o *im) RemoveUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
+	nonce := genGUID()
+	timestamp := getTimestampS()
+
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
+
+	headers := make(map[string]string)
+	headers["nonce"] = nonce
+	headers["timestamp"] = timestamp
+	headers["cmimToken"] = cmimToken
+	headers["sign"] = sign
+	headers["appUid"] = fromUID
+	headers["appkey"] = o.GetConfig().AppKey
+	headers["appId"] = o.GetConfig().AppID
+
+	params := url.Values{}
+	params.Set("userId", o.GetConfig().AppID)
+	params.Set("blackUserIds", strings.Join(userIDs, ","))
+	uri := o.GetConfig().URL + "/api/rest/user/removeUserBlack"
+
+	var errResult error
+
+	for i := 0; i < 3; i++ {
+
+		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
+		if err != nil {
+			return "", userIDs, err
+		}
+
+		if resp.StatusCode != 200 {
+			return "", userIDs, fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+		}
+
+		var result struct {
+			ID   string         `json:"requestID"`
+			Code int            `json:"code"`
+			Msg  string         `json:"msg"`
+			Data map[string]int `json:"messageSendResult"`
+		}
+
+		if err := json.Unmarshal(jsonData, &result); err != nil {
+			return "", userIDs, err
+		}
+		if result.Code != 200 {
+			return "", userIDs, fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+		}
+
+		var list []string
+		for k, v := range result.Data {
+			if v != 200 {
+				list = append(list, k)
+			}
+		}
+		return result.ID, list, nil
+	}
+	return "", userIDs, errResult
 }

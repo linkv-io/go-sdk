@@ -36,6 +36,8 @@ type LvIM interface {
 	SendEventMsg(cmimToken, fromUID, toUID, content, objectName string) (requestID string, err error)
 	UserBlock(cmimToken, fromUID string, userIDs []string, min int64) (err error)
 	UserStatus(cmimToken, fromUID, userID string) (bOnline bool, requestID string, err error)
+	AddUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
+	RemoveUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
 }
 
 func NewLvIM() LvIM {
