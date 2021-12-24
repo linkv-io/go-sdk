@@ -40,7 +40,8 @@ type im struct {
 }
 
 func (o *im) GetConfig() *IMConfig {
-	return &Conf.IM
+	im := &Conf.IM
+	return im
 }
 
 func genRandomString(nLen int) string {

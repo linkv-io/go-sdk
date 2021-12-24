@@ -17,11 +17,12 @@ func main() {
 	im := linkv.NewLvIM("123")
 
 	thirdUID := "golang"
-	thirdToken, err := im.GetTokenByThirdUID(thirdUID)
-	if err != nil {
-		panic("im.GetTokenByThirdUID(" + err.Error() + ")")
-	}
-	fmt.Printf("token:%s\n", thirdToken)
+	// thirdToken, err := im.GetTokenByThirdUID(thirdUID)
+	// if err != nil {
+	// 	panic("im.GetTokenByThirdUID(" + err.Error() + ")")
+	// }
+	// fmt.Printf("token:%s\n", thirdToken)
+	var err error
 	toUID := "123456"
 	content := "77881122"
 	var requestID string

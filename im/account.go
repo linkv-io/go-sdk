@@ -45,6 +45,7 @@ func (o *im) GetTokenByThirdUID(thirdUID string) (string, error) {
 		var result struct {
 			Code  int    `json:"code,string"`
 			Token string `json:"token"`
+			Msg   string `json:"msg"`
 		}
 
 		if err := json.Unmarshal(jsonData, &result); err != nil {
@@ -55,7 +56,7 @@ func (o *im) GetTokenByThirdUID(thirdUID string) (string, error) {
 			return result.Token, nil
 		}
 
-		return "", fmt.Errorf("code not 200(%v)", result.Code)
+		return "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
 	}
 	return "", errResult
 
