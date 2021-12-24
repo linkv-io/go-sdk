@@ -10,19 +10,17 @@ import (
 	"strings"
 )
 
-func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (string, error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (string, error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
+
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
@@ -75,19 +73,18 @@ func (o *im) PushConverseData(cmimToken, fromUID, toUID, content, objectName, to
 	return "", errResult
 }
 
-func (o *im) PushConverseDatas(cmimToken, fromUID string, toUIDs []string, content, objectName string) (string, []string, error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
+func (o *im) PushConverseDatas(fromUID string, toUIDs []string, content, objectName string) (string, []string, error) {
 
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
+
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 

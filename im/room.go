@@ -10,24 +10,21 @@ import (
 	"strings"
 )
 
-func (o *im) SendRoomMessage(cmimToken, fromUID, roomID, content, objectName string) (string, error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) SendRoomMessage(fromUID, toRoomID, content, objectName string) (string, error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
-	params.Set("roomId", roomID)
+	params.Set("roomId", toRoomID)
 	params.Set("content", content)
 	params.Set("objectName", objectName)
 

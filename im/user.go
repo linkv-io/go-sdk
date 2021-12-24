@@ -12,19 +12,16 @@ import (
 	"github.com/linkv-io/go-sdk/http"
 )
 
-func (o *im) UserBlock(cmimToken, fromUID string, userIDs []string, min int64) error {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) UserBlock(userIDs []string, min int64) error {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
@@ -67,19 +64,16 @@ func (o *im) UserBlock(cmimToken, fromUID string, userIDs []string, min int64) e
 	return errResult
 }
 
-func (o *im) UserStatus(cmimToken, fromUID, userID string) (bool, string, error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) UserStatus(userID string) (bool, string, error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
@@ -122,19 +116,16 @@ func (o *im) UserStatus(cmimToken, fromUID, userID string) (bool, string, error)
 	return false, "", errResult
 }
 
-func (o *im) AddUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) AddUserBlack(fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 
@@ -183,19 +174,16 @@ func (o *im) AddUserBlack(cmimToken, fromUID string, userIDs []string) (requestI
 	return "", userIDs, errResult
 }
 
-func (o *im) RemoveUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+func (o *im) RemoveUserBlack(fromUID string, userIDs []string) (requestID string, failUIDs []string, err error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
 	headers["sign"] = sign
-	headers["appUid"] = fromUID
 	headers["appkey"] = o.GetConfig().AppKey
 	headers["appId"] = o.GetConfig().AppID
 

@@ -30,18 +30,18 @@ func NewLvSHOP() LvSHOP {
 
 type LvIM interface {
 	GetTokenByThirdUID(thirdUID string) (imToken string, err error)
-	PushConverseData(cmimToken, fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (requestID string, err error)
-	PushConverseDatas(cmimToken, fromUID string, toUIDs []string, content, objectName string) (requestID string, failUIDs []string, err error)
-	SendRoomMessage(cmimToken, fromUID, roomID, content, objectName string) (requestID string, err error)
-	SendEventMsg(cmimToken, fromUID, toUID, content, objectName string) (requestID string, err error)
-	UserBlock(cmimToken, fromUID string, userIDs []string, min int64) (err error)
-	UserStatus(cmimToken, fromUID, userID string) (bOnline bool, requestID string, err error)
-	AddUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
-	RemoveUserBlack(cmimToken, fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
+	PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (requestID string, err error)
+	PushConverseDatas(fromUID string, toUIDs []string, content, objectName string) (requestID string, failUIDs []string, err error)
+	SendRoomMessage(fromUID, toRoomID, content, objectName string) (requestID string, err error)
+	SendEventMsg(fromUID, toUID, content, objectName string) (requestID string, err error)
+	UserBlock(userIDs []string, min int64) (err error)
+	UserStatus(userID string) (bOnline bool, requestID string, err error)
+	AddUserBlack(fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
+	RemoveUserBlack(fromUID string, userIDs []string) (requestID string, failUIDs []string, err error)
 }
 
-func NewLvIM() LvIM {
-	return im.New()
+func NewLvIM(operatorID string) LvIM {
+	return im.New(operatorID)
 }
 
 type LvRTC interface {

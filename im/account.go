@@ -1,37 +1,28 @@
 package im
 
 import (
-	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/linkv-io/go-sdk/http"
 	"net/url"
-	"sort"
 	"strings"
 )
 
 func (o *im) GetTokenByThirdUID(thirdUID string) (string, error) {
-	nonce := genGUID()
-	timestamp := getTimestampS()
-
-	arr := []string{nonce, timestamp, o.GetConfig().AppSecret}
-	sort.Strings(arr)
-	md5Data := md5.Sum([]byte(strings.Join(arr, "")))
-	cmimToken := strings.ToLower(hex.EncodeToString(md5Data[:]))
-
-	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + timestamp + "|" + nonce))
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
 	headers := make(map[string]string)
-	headers["nonce"] = nonce
-	headers["timestamp"] = timestamp
-	headers["cmimToken"] = cmimToken
-	headers["signature"] = cmimToken
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
+
+	headers["signature"] = o.cmimToken
 	headers["sign"] = sign
 	headers["appkey"] = o.GetConfig().AppKey
-	headers["appUid"] = thirdUID
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
