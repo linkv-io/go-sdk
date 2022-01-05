@@ -130,7 +130,7 @@ func (o *im) AddUserBlack(fromUID string, userIDs []string) (requestID string, f
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
-	params.Set("userId", o.GetConfig().AppID)
+	params.Set("userId", fromUID)
 	params.Set("blackUserIds", strings.Join(userIDs, ","))
 	uri := o.GetConfig().URL + "/api/rest/user/addUserBlack"
 
@@ -188,7 +188,7 @@ func (o *im) RemoveUserBlack(fromUID string, userIDs []string) (requestID string
 	headers["appId"] = o.GetConfig().AppID
 
 	params := url.Values{}
-	params.Set("userId", o.GetConfig().AppID)
+	params.Set("userId", fromUID)
 	params.Set("blackUserIds", strings.Join(userIDs, ","))
 	uri := o.GetConfig().URL + "/api/rest/user/removeUserBlack"
 
