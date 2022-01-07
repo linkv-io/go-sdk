@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func (o *im) PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (string, error) {
+func (o *im) PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string, args ...string) (string, error) {
 	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
 
@@ -37,6 +37,10 @@ func (o *im) PushConverseData(fromUID, toUID, content, objectName, toAppID, toUs
 
 	if len(toUserExtSysUserID) > 0 {
 		params.Set("toUserExtSysUserId", toUserExtSysUserID)
+	}
+
+	if len(args) > 0 {
+		params.Set("pushData", args[0])
 	}
 
 	uri := o.GetConfig().URL + "/api/rest/message/v1/converse/pushConverseData"
@@ -73,7 +77,7 @@ func (o *im) PushConverseData(fromUID, toUID, content, objectName, toAppID, toUs
 	return "", errResult
 }
 
-func (o *im) PushConverseDatas(fromUID string, toUIDs []string, content, objectName string) (string, []string, error) {
+func (o *im) PushConverseDatas(fromUID string, toUIDs []string, content, objectName string, args ...string) (string, []string, error) {
 
 	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
@@ -94,6 +98,10 @@ func (o *im) PushConverseDatas(fromUID string, toUIDs []string, content, objectN
 	params.Set("content", content)
 	params.Set("appId", o.GetConfig().AppID)
 	params.Set("objectName", objectName)
+
+	if len(args) > 0 {
+		params.Set("pushData", args[0])
+	}
 
 	uri := o.GetConfig().URL + "/api/rest/message/v1/converse/pushConverseDatas"
 
