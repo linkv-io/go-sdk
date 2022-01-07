@@ -76,7 +76,7 @@ func main() {
 	}
 	fmt.Println("RemoveUserBlack requestID:", requestID, "failUIDs:", failUIDs)
 
-	groupID := "test9"
+	groupID := "test10"
 	groupName := "test"
 	adminUserID := "1"
 	adminNickName := "admin"
@@ -170,7 +170,7 @@ func main() {
 	fmt.Println("GroupSetNotifiable requestID:", requestID)
 
 	var guList []linkv.IMGroupUser
-	if guList, requestID, err = im.GroupUserList(userID, 1, 10); err != nil {
+	if guList, requestID, err = im.GroupUserList(groupID, 1, 10); err != nil {
 		panic("GroupUserList" + err.Error() + ")")
 	}
 	fmt.Println("GroupUserList requestID:", requestID, "group users:", guList)
