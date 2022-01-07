@@ -30,8 +30,8 @@ func NewLvSHOP() LvSHOP {
 
 type LvIM interface {
 	GetTokenByThirdUID(thirdUID string) (imToken string, err error)
-	PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string) (requestID string, err error)
-	PushConverseDatas(fromUID string, toUIDs []string, content, objectName string) (requestID string, failUIDs []string, err error)
+	PushConverseData(fromUID, toUID, content, objectName, toAppID, toUserExtSysUserID string, args ...string) (requestID string, err error)
+	PushConverseDatas(fromUID string, toUIDs []string, content, objectName string, args ...string) (requestID string, failUIDs []string, err error)
 	SendRoomMessage(fromUID, toRoomID, content, objectName string) (requestID string, err error)
 	SendEventMsg(fromUID, toUID, content, objectName string) (requestID string, err error)
 	UserBlock(userIDs []string, min int64) (err error)
