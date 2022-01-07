@@ -76,4 +76,102 @@ func main() {
 	}
 	fmt.Println("RemoveUserBlack requestID:", requestID, "failUIDs:", failUIDs)
 
+	groupID := "test9"
+	groupName := "test"
+	adminUserID := "1"
+	adminNickName := "admin"
+	if requestID, err = im.GroupCreate(adminUserID, adminNickName, groupID, groupName); err != nil {
+		panic("im.GroupCreate" + err.Error() + ")")
+	}
+	fmt.Println("GroupCreate requestID:", requestID)
+
+	userID := "10"
+	nickName := "10a"
+	if requestID, err = im.GroupJoin(userID, nickName, groupID); err != nil {
+		panic("im.GroupJoin" + err.Error() + ")")
+	}
+	fmt.Println("GroupJoin requestID:", requestID)
+
+	if requestID, err = im.GroupExit(userID, groupID); err != nil {
+		panic("im.GroupExit" + err.Error() + ")")
+	}
+	fmt.Println("GroupExit requestID:", requestID)
+
+	if requestID, err = im.GroupJoin(userID, nickName, groupID); err != nil {
+		panic("im.GroupJoin" + err.Error() + ")")
+	}
+	fmt.Println("GroupJoin requestID:", requestID)
+
+	var ginfo *linkv.IMGroupInfo
+	if ginfo, requestID, err = im.GroupInfo(groupID); err != nil {
+		panic("im.GroupInfo" + err.Error() + ")")
+	}
+	fmt.Println("GroupInfo requestID:", requestID, "info:", *ginfo)
+
+	if requestID, err = im.GroupModifyName(adminUserID, groupID, "bb"); err != nil {
+		panic("im.GroupModifyName" + err.Error() + ")")
+	}
+	fmt.Println("GroupModifyName requestID:", requestID)
+
+	if requestID, err = im.GroupModifyTopic(adminUserID, groupID, "bb"); err != nil {
+		panic("im.GroupModifyTopic" + err.Error() + ")")
+	}
+	fmt.Println("GroupModifyTopic requestID:", requestID)
+
+	fmt.Println("GroupModifyAdmin requestID:", requestID)
+	if requestID, err = im.GroupDissolve(adminUserID, groupID, linkv.IMStatusGroupBlock); err != nil {
+		panic("im.GroupDissolve" + err.Error() + ")")
+	}
+	fmt.Println("GroupDissolve requestID:", requestID)
+
+	if requestID, err = im.GroupDissolve(adminUserID, groupID, linkv.IMStatusGroupUnBlock); err != nil {
+		panic("im.GroupDissolve" + err.Error() + ")")
+	}
+	fmt.Println("GroupDissolve requestID:", requestID)
+
+	if requestID, err = im.GroupKickUser(adminUserID, userID, groupID); err != nil {
+		panic("im.GroupKickUser" + err.Error() + ")")
+	}
+	fmt.Println("GroupKickUser requestID:", requestID)
+
+	if requestID, err = im.GroupJoin(userID, nickName, groupID); err != nil {
+		panic("im.GroupJoin" + err.Error() + ")")
+	}
+	fmt.Println("GroupJoin requestID:", requestID)
+
+	if requestID, err = im.GroupGagUser(adminUserID, userID, groupID, linkv.IMStatusGroupUserDisable); err != nil {
+		panic("im.GroupGagUser" + err.Error() + ")")
+	}
+	fmt.Println("GroupGagUser requestID:", requestID)
+
+	if requestID, err = im.GroupGagAllUser(adminUserID, groupID, linkv.IMStatusGroupUserDisable); err != nil {
+		panic("im.GroupGagAllUser" + err.Error() + ")")
+	}
+	fmt.Println("GroupGagAllUser requestID:", requestID)
+
+	if requestID, err = im.GroupModifyAdmin(adminUserID, userID, groupID); err != nil {
+		panic("im.GroupModifyAdmin" + err.Error() + ")")
+	}
+	fmt.Println("GroupModifyAdmin requestID:", requestID)
+
+	if requestID, err = im.GroupModifyAdmin(userID, adminUserID, groupID); err != nil {
+		panic("im.GroupModifyAdmin" + err.Error() + ")")
+	}
+
+	var gList []linkv.IMGroup
+	if gList, requestID, err = im.GroupList(userID, 1, 10); err != nil {
+		panic("im.GroupList" + err.Error() + ")")
+	}
+	fmt.Println("im.GroupList requestID:", requestID, "groups:", gList)
+
+	if requestID, err = im.GroupSetNotifiable(userID, groupID, linkv.IMStatusGroupUserDisable); err != nil {
+		panic("im.GroupSetNotifiable" + err.Error() + ")")
+	}
+	fmt.Println("GroupSetNotifiable requestID:", requestID)
+
+	var guList []linkv.IMGroupUser
+	if guList, requestID, err = im.GroupUserList(userID, 1, 10); err != nil {
+		panic("GroupUserList" + err.Error() + ")")
+	}
+	fmt.Println("GroupUserList requestID:", requestID, "group users:", guList)
 }

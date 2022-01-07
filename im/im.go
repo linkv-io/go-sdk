@@ -80,3 +80,44 @@ func genCore(secret string) (string, string, string) {
 	cmimToken := strings.ToLower(hex.EncodeToString(md5Data[:]))
 	return nonce, timestamp, cmimToken
 }
+
+type GroupStatus int
+type GroupUserStatus int
+
+var (
+	GroupUnBlock GroupStatus = 0
+	GroupBlock   GroupStatus = 1
+
+	GroupUserDisable GroupUserStatus = 0
+	GroupUserEnable  GroupUserStatus = 1
+)
+
+type Group struct {
+	ID        string `json:"gid"`
+	Name      string `json:"gname"`
+	GagStatus int8   `json:"gagstatus"`
+	AppID     string `json:"appid"`
+	Block     int8   `json:"block"`
+	Admin     string `json:"admin"`
+	CTime     string `json:"createtime"`
+	Version   int64  `json:"version"`
+}
+
+type GroupUser struct {
+	ID         string `json:"uid"`
+	Name       string `json:"nickname"`
+	GID        string `json:"gid"`
+	AppID      string `json:"appid"`
+	GagStatus  int8   `json:"gagstatus"`
+	Role       int8   `json:"role"`
+	Notifiable int8   `json:"notifiable"`
+	Status     int8   `json:"status"`
+	CTime      string `json:"createtime"`
+}
+
+type GroupInfo struct {
+	Group
+	Topic  string
+	MTime  string
+	Author string
+}

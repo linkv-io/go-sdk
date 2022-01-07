@@ -47,7 +47,7 @@ func (o *im) SendEventMsg(fromUID, toUID, content, objectName string) (string, e
 		}
 
 		var result struct {
-			ID   string `json:"requestId"`
+			ID   string `json:"requestID"`
 			Code int    `json:"code"`
 			Msg  string `json:"msg"`
 		}
