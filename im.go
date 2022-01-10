@@ -46,6 +46,7 @@ type LvIM interface {
 	GroupSetNotifiable(userID, groupID string, status IMGroupUserStatus) (string, error)
 
 	GroupUserList(groupID string, page, size int) ([]IMGroupUser, string, error)
+	GroupPushMsg(fromUID, groupID, content, objectName string, args ...string) (string, error)
 }
 
 func NewLvIM(operatorID string) LvIM {

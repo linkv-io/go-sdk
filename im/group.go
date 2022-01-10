@@ -67,6 +67,65 @@ func (o *im) GroupCreate(userID, nickName, groupID, groupName string) (string, e
 	return "", errResult
 }
 
+func (o *im) GroupPushMsg(fromUID, groupID, content, objectName string, args ...string) (string, error) {
+	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
+	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))
+
+	headers := make(map[string]string)
+	headers["nonce"] = o.nonce
+	headers["timestamp"] = o.timestamp
+	headers["cmimToken"] = o.cmimToken
+	headers["appUid"] = o.operatorID
+
+	headers["sign"] = sign
+	headers["appkey"] = o.GetConfig().AppKey
+	headers["appId"] = o.GetConfig().AppID
+
+	params := url.Values{}
+	params.Set("fromUserId", fromUID)
+	params.Set("toGroupId", groupID)
+	params.Set("content", content)
+	params.Set("appId", o.GetConfig().AppID)
+	params.Set("objectName", objectName)
+
+	if len(args) > 0 {
+		params.Set("pushData", args[0])
+	}
+
+	uri := o.GetConfig().URL + "/api/rest/message/pushGroupMsg"
+
+	var errResult error
+
+	for i := 0; i < 3; i++ {
+
+		jsonData, resp, err := http.PostDataWithHeader(uri, params, headers)
+		if err != nil {
+			return "", err
+		}
+
+		if resp.StatusCode != 200 {
+			return "", fmt.Errorf("httpStatusCode(%v) != 200", resp.StatusCode)
+		}
+
+		var result struct {
+			ID   string `json:"requestID"`
+			Code int    `json:"code"`
+			Msg  string `json:"msg"`
+		}
+
+		if err := json.Unmarshal(jsonData, &result); err != nil {
+			return "", err
+		}
+
+		if result.Code == 200 {
+			return result.ID, nil
+		}
+
+		return "", fmt.Errorf("code not 200(%v) message(%v)", result.Code, result.Msg)
+	}
+	return "", errResult
+}
+
 func (o *im) GroupJoin(userID, nickName, groupID string) (string, error) {
 	sha1Data := sha1.Sum([]byte(o.GetConfig().AppID + "|" + o.GetConfig().AppKey + "|" + o.timestamp + "|" + o.nonce))
 	sign := strings.ToUpper(hex.EncodeToString(sha1Data[:]))

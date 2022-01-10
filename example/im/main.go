@@ -174,4 +174,8 @@ func main() {
 		panic("GroupUserList" + err.Error() + ")")
 	}
 	fmt.Println("GroupUserList requestID:", requestID, "group users:", guList)
+	if requestID, err = im.GroupPushMsg(userID, groupID, content, objectName); err != nil {
+		panic("im.GroupPushMsg(" + err.Error() + ")")
+	}
+	fmt.Println("GroupPushMsg", requestID)
 }
